@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Notifier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 2.2rem;
+        }
+        .server-info {
+            background: #f0f4ff;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+        .server-info h2 {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .server-address {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background: #5a67d8;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-contact {
+            background: #2196F3;
+            color: white;
+        }
+        .btn-contact:hover {
+            background: #1e88e5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+        .footer {
+            margin-top: 25px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔔 Server Notifier</h1>
+        
+        <div class="server-info">
+            <h2>🌐 Current Server Address</h2>
+            <div class="server-address">
+                <span id="serverIpPort">loading...</span>
+                <button class="copy-btn" onclick="copyAddress()">Copy</button>
+            </div>
+        </div>
+
+        <a href="https://t.me/Mrbrave_robot" target="_blank" style="text-decoration: none;">
+            <button class="btn btn-contact">
+                <span>📞</span> Contact Admin
+            </button>
+        </a>
+
+        <div class="footer">
+            You'll receive a notification when the server starts.
+        </div>
+    </div>
+
+    <script>
+        const serverSpan = document.getElementById('serverIpPort');
+
+        // Load server address from localStorage or set default
+        function loadServerAddress() {
+            const savedIp = localStorage.getItem('serverIp');
+            const savedPort = localStorage.getItem('serverPort');
+            
+            if (savedIp && savedPort) {
+                serverSpan.textContent = `${savedIp}:${savedPort}`;
+            } else {
+                serverSpan.textContent = 'Not set';
+            }
+        }
+
+        // Copy address to clipboard
+        window.copyAddress = function() {
+            const address = serverSpan.textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                alert('Address copied!');
+            }).catch(() => {
+                alert('Failed to copy');
+            });
+        };
+
+        // Check for URL parameters to update server address (for admin use)
+        function checkForUpdates() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ip = urlParams.get('ip');
+            const port = urlParams.get('port');
+            
+            if (ip && port) {
+                localStorage.setItem('serverIp', ip);
+                localStorage.setItem('serverPort', port);
+                serverSpan.textContent = `${ip}:${port}`;
+            }
+        }
+
+        // Initialize
+        checkForUpdates();
+        loadServerAddress();
+    </script>
+</body>
+</html>
